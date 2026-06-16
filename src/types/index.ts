@@ -8,9 +8,11 @@ import { Timestamp } from "firebase/firestore";
 export interface UserProfile {
   uid: string;
   displayName: string;
+  name: string;
   email: string;
   photoURL: string;
   createdAt: Timestamp | Date;
+  lastLoginAt: Timestamp | Date;
 }
 
 // ----- Lesson Content -----
@@ -62,19 +64,23 @@ export interface UserProgress {
   uid: string;
   completedDays: number[];
   lastCompletedDay: number;
+  streak: number;
   updatedAt: Timestamp | Date;
 }
 
 // ----- Interview -----
-export type InterviewType = "self-intro" | "school" | "job" | "daily";
+export type InterviewType = "self-intro" | "hr" | "fresher" | "daily";
 
 export interface InterviewQuestion {
   question: string;
   userAnswer: string;
   score: number;
+  grammarScore: number;
+  fluencyScore: number;
+  vocabularyScore: number;
+  confidenceScore: number;
   grammarCorrection: string;
   betterAnswer: string;
-  confidenceRating: number;
   feedback: string;
 }
 
@@ -97,9 +103,12 @@ export interface EvaluationRequest {
 
 export interface EvaluationResult {
   score: number;
+  grammarScore: number;
+  fluencyScore: number;
+  vocabularyScore: number;
+  confidenceScore: number;
   grammarCorrection: string;
   betterAnswer: string;
-  confidenceRating: number;
   feedback: string;
 }
 
