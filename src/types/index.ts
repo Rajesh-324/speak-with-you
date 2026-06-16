@@ -66,6 +66,14 @@ export interface UserProgress {
   lastCompletedDay: number;
   streak: number;
   updatedAt: Timestamp | Date;
+  level?: "beginner" | "intermediate" | "advanced";
+  cefrLevel?: string;
+  placementTestCompleted?: boolean;
+  placementScore?: number;
+  placementCompletedAt?: Timestamp | Date;
+  xp?: number;
+  badges?: string[];
+  certificates?: string[];
 }
 
 // ----- Interview -----

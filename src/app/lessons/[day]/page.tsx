@@ -44,44 +44,19 @@ function LessonDayContent() {
 
   const completedDays = progress?.completedDays || [];
   const isCompleted = completedDays.includes(dayNum);
-  const isAccessible = dayNum === 1 || completedDays.includes(dayNum - 1);
+  const isAccessible =
+    dayNum === 1 ||
+    (dayNum === 31 && (progress?.level === "intermediate" || progress?.level === "advanced" || completedDays.includes(30))) ||
+    (dayNum === 61 && (progress?.level === "advanced" || completedDays.includes(60))) ||
+    completedDays.includes(dayNum - 1);
 
   const handleComplete = useCallback(async () => {
     if (!user || isCompleted || completing) return;
     setCompleting(true);
     try {
       await markDayCompleted(user.uid, dayNum);
-      setProgress((prev) => {
-        const currentStreak = prev?.streak || 0;
-        let newStreak = 1;
-        if (prev?.updatedAt) {
-          const lastUpdated = prev.updatedAt instanceof Date
-            ? prev.updatedAt
-            : (prev.updatedAt as { toDate?: () => Date }).toDate
-            ? (prev.updatedAt as { toDate: () => Date }).toDate()
-            : new Date(prev.updatedAt as unknown as string);
-          const today = new Date();
-          const date1 = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-          const date2 = new Date(lastUpdated.getFullYear(), lastUpdated.getMonth(), lastUpdated.getDate());
-          const diffTime = Math.abs(date1.getTime() - date2.getTime());
-          const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-          
-          if (diffDays === 0) {
-            newStreak = currentStreak || 1;
-          } else if (diffDays === 1) {
-            newStreak = currentStreak + 1;
-          } else {
-            newStreak = 1;
-          }
-        }
-        return {
-          uid: user.uid,
-          completedDays: [...(prev?.completedDays || []), dayNum],
-          lastCompletedDay: dayNum,
-          streak: newStreak,
-          updatedAt: new Date(),
-        };
-      });
+      const updatedData = await getUserProgress(user.uid);
+      setProgress(updatedData);
     } catch (err) {
       console.error("Error marking day completed:", err);
     }
@@ -406,7 +381,7 @@ function LessonDayContent() {
                 ← Day {dayNum - 1}
               </Link>
             )}
-            {dayNum < 30 && completedDays.includes(dayNum) && (
+            {dayNum < 90 && completedDays.includes(dayNum) && (
               <Link
                 href={`/lessons/${dayNum + 1}`}
                 className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-400 hover:text-white transition-colors"

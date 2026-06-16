@@ -326,3 +326,113 @@ function generatePlaceholderChat(
   }
   return "Thank you for sharing that! That is very clear. Can you tell me more about your future goals in this area?";
 }
+
+/**
+ * Evaluate AI Placement Test answers to determine CEFR level.
+ */
+export async function evaluatePlacementAnswers(
+  answers: string[]
+): Promise<{ cefrLevel: string; assignedTrack: "beginner" | "intermediate" | "advanced"; feedback: string; score: number }> {
+  const apiKey = process.env.AI_API_KEY;
+  const provider = process.env.AI_PROVIDER || "gemini";
+
+  if (apiKey && apiKey !== "your_gemini_or_openai_key_here" && provider === "gemini") {
+    try {
+      const questions = [
+        "Introduce yourself in English.",
+        "Describe your hobbies and interests.",
+        "Talk about a recent holiday or trip you took.",
+        "Describe a challenge you solved in your life, studies, or work.",
+        "Give your opinion: Is technology good or bad for education?"
+      ];
+
+      let prompt = `You are an expert English language examiner assessing a student's CEFR level.
+Analyze the following 5 placement test answers:
+
+`;
+
+      for (let i = 0; i < 5; i++) {
+        prompt += `Question ${i + 1}: "${questions[i]}"\n`;
+        prompt += `Answer ${i + 1}: "${answers[i] || ""}"\n\n`;
+      }
+
+      prompt += `Evaluate the grammar, vocabulary, sentence structure, and coherence.
+Determine their CEFR level (A1, A2, B1, B2, C1, or C2) and map it to one of these three tracks:
+- "beginner" (if CEFR is A1 or A2)
+- "intermediate" (if CEFR is B1 or B2)
+- "advanced" (if CEFR is C1 or C2)
+
+Provide a brief summary feedback (2-3 sentences) explaining the placement.
+Provide an overall placement score out of 100.
+
+Respond ONLY with a JSON object in this exact format:
+{
+  "cefrLevel": "B1",
+  "assignedTrack": "intermediate",
+  "feedback": "Your vocabulary is appropriate for intermediate tasks. However, work on complex structures.",
+  "score": 65
+}
+
+Ensure the response is JSON only.`;
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: "application/json",
+            },
+          }),
+        }
+      );
+
+      const data = await response.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) {
+        const parsed = JSON.parse(text);
+        return {
+          cefrLevel: parsed.cefrLevel || "B1",
+          assignedTrack: parsed.assignedTrack || "intermediate",
+          feedback: parsed.feedback || "Based on your test performance, you have been placed in the intermediate level.",
+          score: parsed.score || 60
+        };
+      }
+    } catch (error) {
+      console.error("Gemini placement error, using fallback:", error);
+    }
+  }
+
+  // Fallback to local heuristic evaluation
+  let totalLength = 0;
+  for (const ans of answers) {
+    totalLength += (ans || "").trim().split(/\s+/).filter(Boolean).length;
+  }
+  const avgWords = totalLength / 5;
+
+  let cefrLevel = "A2";
+  let assignedTrack: "beginner" | "intermediate" | "advanced" = "beginner";
+  let feedback = "Your answers indicate beginner-level familiarity. We recommend starting with our Level 1: Beginner course to build core structures.";
+  let score = 35;
+
+  if (avgWords >= 25) {
+    cefrLevel = "C1";
+    assignedTrack = "advanced";
+    feedback = "Excellent! You demonstrate a rich vocabulary and fluent sentence construction. You have been placed directly in our Level 3: Advanced course.";
+    score = 85;
+  } else if (avgWords >= 10) {
+    cefrLevel = "B1";
+    assignedTrack = "intermediate";
+    feedback = "Good job! You can express yourself in complete sentences. We recommend starting with our Level 2: Intermediate course to focus on professional communication.";
+    score = 60;
+  }
+
+  return {
+    cefrLevel,
+    assignedTrack,
+    feedback,
+    score
+  };
+}

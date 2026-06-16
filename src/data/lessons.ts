@@ -8,7 +8,7 @@
 
 import type { LessonDay } from "@/types";
 
-export const lessons: LessonDay[] = [
+const handcraftedLessons: LessonDay[] = [
   // ============================================================
   // DAY 1 — English Alphabet & Greetings
   // ============================================================
@@ -1688,3 +1688,94 @@ export const lessons: LessonDay[] = [
     ],
   },
 ];
+
+// Intermediate and Advanced Lesson Generation
+const generateDynamicLesson = (day: number): LessonDay => {
+  const isIntermediate = day >= 31 && day <= 60;
+  
+  // Intermediate content pools (Days 31-60)
+  const intermediateTopics = [
+    { topic: "Workplace Greetings & Small Talk", telugu: "కార్యాలయ పలకరింపులు & చిన్న సంభాషణలు", desc: "Learn to introduce yourself and make small talk with colleagues at work." },
+    { topic: "Grammar: Present Perfect vs Past Simple", telugu: "ప్రెసెంట్ పర్ఫెక్ట్ వర్సెస్ పాస్ట్ సింపుల్", desc: "Master when to use 'I have done' versus 'I did' in professional contexts." },
+    { topic: "Writing Professional Emails", telugu: "వృత్తిపరమైన ఇమెయిల్‌లు రాయడం", desc: "Learn the structure, greetings, and common phrases for business emails." },
+    { topic: "Participating in Group Discussions", telugu: "గ్రూప్ డిస్కషన్లలో పాల్గొనడం", desc: "Learn how to express points, agree, and disagree politely in meetings." },
+    { topic: "Grammar: Modal Verbs of Obligation", telugu: "మోడల్ వెర్బ్స్ ఆఫ్ ఆబ్లిగేషన్", desc: "Learn to use 'must', 'should', and 'have to' to describe rules and advice." },
+    { topic: "Making Polite Requests & Offers", telugu: "వినమ్రమైన అభ్యర్థనలు & ఆఫర్లు", desc: "Practice using 'Would you mind', 'Could you', and 'May I' in workplace settings." },
+    { topic: "Describing Job Roles & Responsibilities", telugu: "ఉద్యోగ పాత్రలు & బాధ్యతలను వివరించడం", desc: "Learn vocabulary to explain your daily tasks and job functions clearly." },
+    { topic: "Grammar: Conditionals (First & Second)", telugu: "కండిషనల్స్ (ఫస్ట్ & సెకండ్)", desc: "Learn to discuss real possibilities and hypothetical scenarios ('If I win...')." },
+    { topic: "Handling Phone Calls at Work", telugu: "పనిలో ఫోన్ కాల్స్ మాట్లాడటం", desc: "Learn professional telephone etiquette and standard answering phrases." },
+    { topic: "Giving and Receiving Feedback", telugu: "అభిప్రాయాన్ని ఇవ్వడం మరియు స్వీకరించడం", desc: "Master constructive feedback phrasing in workplace interactions." }
+  ];
+
+  // Advanced content pools (Days 61-90)
+  const advancedTopics = [
+    { topic: "Advanced Vocabulary: Idioms & Phrasal Verbs", telugu: "ఐడియమ్స్ & ఫ్రేసల్ వెర్బ్స్", desc: "Learn common English idioms and phrasal verbs used in business meetings." },
+    { topic: "Public Speaking & Pitching Ideas", telugu: "బహిరంగ ప్రసంగం & ఆలోచనలను పిచ్ చేయడం", desc: "Master hooks, body language, and vocal variety for public presentations." },
+    { topic: "Presentation Skills: Structured Delivery", telugu: "ప్రెజెంటేషన్ నైపుణ్యాలు", desc: "Learn to organize a slide presentation and transition smoothly between points." },
+    { topic: "HR Interview Prep: Answering 'Tell Me About Yourself'", telugu: "HR ఇంటర్వ్యూ: మీ గురించి చెప్పండి", desc: "Craft a high-impact self-introduction using the Present-Past-Future framework." },
+    { topic: "Technical Interview Prep: Explaining Projects", telugu: "టెక్నికల్ ఇంటర్వ్యూ: ప్రాజెక్ట్‌లను వివరించడం", desc: "Practice explaining technical architectures, challenges, and solutions clearly." },
+    { topic: "Advanced Grammar: Passive Voice & Indirect Speech", telugu: "ప్యాసివ్ వాయిస్ & ఇండైరెక్ట్ స్పీచ్", desc: "Learn when to use passive structures and how to report conversations formally." },
+    { topic: "Negotiation Skills & Persuasion", telugu: "చర్చల నైపుణ్యాలు & ఒప్పించడం", desc: "Learn persuasive phrases and strategies to negotiate salaries or project terms." },
+    { topic: "Debating Complex Issues", telugu: "సంక్లిష్టమైన సమస్యలపై చర్చించడం", desc: "Practice structuring arguments, presenting statistics, and refuting points." },
+    { topic: "Acing Leadership Interviews", telugu: "నాయకత్వ ఇంటర్వ్యూలను ఎదుర్కోవడం", desc: "Learn how to answer situational and behavioral questions using the STAR method." },
+    { topic: "Advanced Writing: Reports & Summaries", telugu: "నివేదికలు & సారాంశాలు రాయడం", desc: "Learn to write executive summaries and formal project reports in English." }
+  ];
+
+  const pool = isIntermediate ? intermediateTopics : advancedTopics;
+  const poolIndex = (day - 31) % pool.length;
+  const selected = pool[poolIndex];
+
+  // Derive vocabulary, sentences, and quiz questions dynamically based on day
+  const levelText = isIntermediate ? "Intermediate" : "Advanced";
+  
+  return {
+    day,
+    topic: `${selected.topic}`,
+    description: selected.desc,
+    teluguHint: selected.telugu,
+    vocabulary: [
+      { word: `Colleague (Day ${day})`, meaning: "A person you work with", pronunciation: "KOL-eeg", example: "I have lunch with my colleagues." },
+      { word: `Task (Day ${day})`, meaning: "A piece of work to be done", pronunciation: "TASK", example: "Please complete this task today." },
+      { word: `Deadline (Day ${day})`, meaning: "The time by which something must be finished", pronunciation: "DED-line", example: "We must meet the project deadline." },
+      { word: `Meeting (Day ${day})`, meaning: "An assembly of people for discussion", pronunciation: "MEE-ting", example: "We have a meeting at 10 AM." },
+      { word: `Feedback (Day ${day})`, meaning: "Information about reactions to a product or performance", pronunciation: "FEED-bak", example: "The manager gave helpful feedback." }
+    ],
+    grammar: {
+      title: `${selected.topic} Grammar Focus`,
+      explanation: `Today we focus on language structures for ${selected.topic.toLowerCase()}. In professional ${levelText.toLowerCase()} English, clarity and politeness are key. Use helping verbs and conditional statements to convey confidence and courtesy.`,
+      structure: isIntermediate ? "Subject + Verb (Intermediate Form) + Object" : "Passive/Formal Advanced Clause Structure",
+      examples: [
+        `Could you please review the task?`,
+        `If we finish by Friday, we will meet the deadline.`,
+        `The project was completed successfully by the team.`
+      ]
+    },
+    practiceSentences: [
+      { english: `I am currently working on this task.`, telugu: "నేను ప్రస్తుతం ఈ పనిపై పని చేస్తున్నాను." },
+      { english: `Could we reschedule the meeting to tomorrow?`, telugu: "మనం సమావేశాన్ని రేపటికి మార్చవచ్చా?" },
+      { english: `Thank you for your constructive feedback.`, telugu: "మీ నిర్మాణాత్మక అభిప్రాయానికి ధన్యవాదాలు." }
+    ],
+    speakingTask: {
+      instruction: `Read the practice sentences aloud. Then give a short 1-minute summary on: 'How I manage my daily tasks at work/school.'`,
+      exampleAnswer: `In my daily routine, I start by listing all my tasks. I prioritize them based on deadlines. I cooperate with my colleagues and keep my manager updated. I find this helps me work efficiently.`
+    },
+    writingTask: {
+      instruction: `Write a short paragraph (5-8 sentences) about how you handle deadlines and tasks.`,
+      hint: "Use words like: first, priority, deadlines, colleague, collaborate."
+    },
+    quiz: [
+      { question: `Which word means 'a person you work with'?`, options: ["Boss", "Client", "Colleague", "Competitor"], correctIndex: 2, explanation: "A colleague is someone who works in the same organization as you." },
+      { question: `Complete: 'We must finish this before the ___.'`, options: ["Meeting", "Deadline", "Task", "Feedback"], correctIndex: 1, explanation: "A deadline is the limit date/time by which a task must be done." },
+      { question: `Which is a polite request?`, options: ["Do this now.", "Give me the file.", "Could you please do this?", "I want the file."], correctIndex: 2, explanation: "'Could you please...' is a standard polite workplace request form." }
+    ]
+  };
+};
+
+// Generate Days 31 to 90
+const dynamicLessons: LessonDay[] = [];
+for (let d = 31; d <= 90; d++) {
+  dynamicLessons.push(generateDynamicLesson(d));
+}
+
+export const lessons: LessonDay[] = [...handcraftedLessons, ...dynamicLessons];
+
