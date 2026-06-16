@@ -74,10 +74,19 @@ export interface UserProgress {
   xp?: number;
   badges?: string[];
   certificates?: string[];
+  referralCode?: string;
+  referredBy?: string;
+  totalSpeakingMinutes?: number;
+  wordsLearned?: number;
+  studyPlan?: {
+    plan: string;
+    weaknesses: string[];
+    generatedAt: string;
+  };
 }
 
 // ----- Interview -----
-export type InterviewType = "self-intro" | "hr" | "fresher" | "daily";
+export type InterviewType = "hr" | "tech" | "support" | "english" | "daily";
 
 export interface InterviewQuestion {
   question: string;
@@ -87,6 +96,7 @@ export interface InterviewQuestion {
   fluencyScore: number;
   vocabularyScore: number;
   confidenceScore: number;
+  pronunciationScore?: number;
   grammarCorrection: string;
   betterAnswer: string;
   feedback: string;
@@ -98,7 +108,11 @@ export interface InterviewSession {
   type: InterviewType;
   questions: InterviewQuestion[];
   overallScore: number;
-  overallFeedback: string;
+  overallFeedback: string; // Dynamic Summary
+  strengths?: string[];
+  weaknesses?: string[];
+  recommendedLessons?: string[];
+  cefrLevel?: string;
   createdAt: Timestamp | Date;
 }
 

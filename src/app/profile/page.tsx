@@ -7,6 +7,7 @@ import { getUserProgress, getInterviewHistory, getBestScore } from "@/lib/firest
 import ProgressBar from "@/components/ui/ProgressBar";
 import Badge from "@/components/ui/Badge";
 import type { UserProgress, InterviewSession } from "@/types";
+import Link from "next/link";
 
 export default function ProfilePage() {
   return (
@@ -88,13 +89,16 @@ function ProfileContent() {
     grad_intermediate: { icon: "🎖️", name: "Intermediate Graduate", desc: "Finished Intermediate Course (Day 60)", color: "border-pink-500/30 text-pink-400 bg-pink-500/5" },
     grad_advanced: { icon: "🏆", name: "Advanced Graduate", desc: "Finished Advanced Course (Day 90)", color: "border-yellow-500/30 text-yellow-400 bg-yellow-500/5" },
     grad_master: { icon: "👑", name: "English Master", desc: "Finished all 90 days of lessons", color: "border-red-500/30 text-red-400 bg-red-500/5" },
+    xp_1000: { icon: "💎", name: "XP Elite", desc: "Earned more than 1,000 XP", color: "border-amber-500/30 text-amber-400 bg-amber-500/5" },
+    interview_master: { icon: "🥇", name: "Interview Master", desc: "Completed 3 interviews with score >= 8", color: "border-indigo-500/30 text-indigo-400 bg-indigo-500/5" },
   };
 
   const interviewTypeLabels: Record<string, string> = {
-    "self-intro": "🙋 Self Introduction",
     hr: "🤝 HR Interview",
-    fresher: "🎓 Fresher Interview",
-    daily: "💬 Daily Conversation Practice",
+    tech: "💻 Tech Interview",
+    support: "📞 Support Interview",
+    english: "🗣️ English Practice",
+    daily: "💬 Daily Conversation",
   };
 
   const trackNames = {
@@ -175,6 +179,30 @@ function ProfileContent() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Part B Quick Navigation Links */}
+            <div className="mt-3 border-t border-white/5 pt-3 flex flex-wrap gap-2 justify-end">
+              <Link
+                href="/leaderboard"
+                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/25 transition-all"
+              >
+                🏆 Leaderboard & Referrals
+              </Link>
+              <Link
+                href="/booster"
+                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/25 transition-all"
+              >
+                🚀 Resume & Interview Booster
+              </Link>
+              {user?.email === "gunagantirajesh7@gmail.com" && (
+                <Link
+                  href="/admin"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/25 transition-all"
+                >
+                  ⚙️ Admin Dashboard
+                </Link>
+              )}
             </div>
           </div>
         </div>

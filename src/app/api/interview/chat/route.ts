@@ -4,13 +4,20 @@
 // ============================================================
 
 import { NextRequest, NextResponse } from "next/server";
-import { chatWithGemini } from "@/lib/ai";
+import { chatWithAgent } from "@/lib/ai";
 import type { InterviewType } from "@/types";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 export async function POST(request: NextRequest) {
   try {
+    if (checkRateLimit(request)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again in a minute." },
+        { status: 429 }
+      );
+    }
     const body = await request.json();
-    const { messages, interviewType } = body;
+    const { messages, interviewType, pronunciationConfidence } = body;
 
     // Validate input
     if (!messages || !Array.isArray(messages) || !interviewType) {
@@ -21,7 +28,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate interview type
-    const validTypes: InterviewType[] = ["self-intro", "hr", "fresher", "daily"];
+    const validTypes: InterviewType[] = ["hr", "tech", "support", "english", "daily"];
     if (!validTypes.includes(interviewType)) {
       return NextResponse.json(
         { error: "Invalid interview type" },
@@ -29,10 +36,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call chat helper
-    const responseText = await chatWithGemini(messages, interviewType);
+    // Call chat agent helper
+    const result = await chatWithAgent(
+      messages, 
+      interviewType, 
+      typeof pronunciationConfidence === "number" ? pronunciationConfidence : 1.0
+    );
 
-    return NextResponse.json({ response: responseText });
+    return NextResponse.json(result);
   } catch (error) {
     console.error("Chat API error:", error);
     return NextResponse.json(

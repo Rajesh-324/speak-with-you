@@ -2,21 +2,46 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users collection — only the owner can read/write
+    // Users collection — owner or admin only
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if request.auth != null && (request.auth.uid == userId || request.auth.token.email == "gunagantirajesh7@gmail.com");
+      match /{allSubcollections=**} {
+        allow read, write: if request.auth != null && (request.auth.uid == userId || request.auth.token.email == "gunagantirajesh7@gmail.com");
+      }
     }
 
-    // Progress collection — only the owner can read/write
+    // Progress collection — owner or admin only (keeps private studyPlans/weaknesses secure)
     match /progress/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if request.auth != null && (request.auth.uid == userId || request.auth.token.email == "gunagantirajesh7@gmail.com");
     }
 
-    // Interviews collection — only the owner can read/write their own interviews
+    // Public Leaderboard collection — authenticated reads, owner write only
+    match /leaderboard/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Public referral codes mapping: code -> { uid }
+    match /referralCodes/{code} {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null && request.resource.data.uid == request.auth.uid;
+    }
+
+    // Referral claims: claimId (refereeUid) -> { refereeUid, referrerUid, code, processed }
+    match /referrals/{claimId} {
+      allow read: if request.auth != null && (resource.data.refereeUid == request.auth.uid || resource.data.referrerUid == request.auth.uid);
+      allow create: if request.auth != null 
+        && request.auth.uid == claimId
+        && request.resource.data.refereeUid == request.auth.uid 
+        && request.resource.data.referrerUid != request.auth.uid
+        && request.resource.data.processed == false;
+      allow update: if request.auth != null && resource.data.referrerUid == request.auth.uid;
+    }
+
+    // Interviews collection — owner or admin only
     match /interviews/{interviewId} {
-      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow read, update, delete: if request.auth != null && (resource.data.uid == request.auth.uid || request.auth.token.email == "gunagantirajesh7@gmail.com");
       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-      allow update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
 
     // Deny all other access by default

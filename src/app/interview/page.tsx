@@ -18,13 +18,13 @@ function InterviewContent() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 page-enter">
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-2">
-            🎤 AI Mock Interview
+            🎤 AI Conversational Interview Agent
           </h1>
           <p className="text-slate-400 text-sm">
-            Choose an interview type below. The AI will ask you 5 questions and give you feedback on each answer.
+            Choose a practice mode below. The AI Conversational Agent will conduct a dynamic voice or text interview, adapting to your responses and grading your performance in real-time.
           </p>
           <p className="text-xs text-indigo-400/50 mt-1">
-            AI మాక్ ఇంటర్వ్యూ — మీ ఇంటర్వ్యూ రకం ఎంచుకోండి
+            AI ఇంటర్వ్యూ ఏజెంట్ — మీ అభ్యాస రకాన్ని ఎంచుకోండి
           </p>
         </div>
 
@@ -41,11 +41,11 @@ function InterviewContent() {
               </h3>
               <p className="text-sm text-slate-400 mt-2">{type.description}</p>
               <div className="mt-4 flex items-center gap-1 text-xs text-indigo-400">
-                <span>5 questions</span>
+                <span>Conversational</span>
                 <span>•</span>
-                <span>AI feedback</span>
+                <span>Voice & Text</span>
                 <span>•</span>
-                <span>Scored</span>
+                <span>Real-Time Scoring</span>
               </div>
               <div className="mt-3 text-xs text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity">
                 Start Interview →

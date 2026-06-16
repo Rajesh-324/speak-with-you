@@ -5,10 +5,18 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { evaluateAnswer } from "@/lib/ai";
+import { checkRateLimit } from "@/lib/rateLimit";
 import type { InterviewType } from "@/types";
 
 export async function POST(request: NextRequest) {
   try {
+    if (checkRateLimit(request)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again in a minute." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { question, answer, interviewType } = body;
 
@@ -21,7 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate interview type
-    const validTypes: InterviewType[] = ["self-intro", "hr", "fresher", "daily"];
+    const validTypes: InterviewType[] = ["hr", "tech", "support", "english", "daily"];
     if (!validTypes.includes(interviewType)) {
       return NextResponse.json(
         { error: "Invalid interview type" },

@@ -242,17 +242,17 @@ function DashboardContent() {
         )}
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <Link
             href="/lessons"
             className="glass-card p-5 hover:-translate-y-1 transition-all duration-300 group"
           >
             <span className="text-3xl mb-3 block">📚</span>
-            <h3 className="font-bold text-white group-hover:text-indigo-300 transition-colors">
+            <h3 className="font-bold text-white group-hover:text-indigo-300 transition-colors text-sm sm:text-base">
               All Lessons
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              Browse lessons across all 3 levels
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Browse structured learning lessons across all 3 mastery tracks.
             </p>
           </Link>
 
@@ -261,24 +261,63 @@ function DashboardContent() {
             className="glass-card p-5 hover:-translate-y-1 transition-all duration-300 group"
           >
             <span className="text-3xl mb-3 block">🎤</span>
-            <h3 className="font-bold text-white group-hover:text-purple-300 transition-colors">
-              Mock Interview
+            <h3 className="font-bold text-white group-hover:text-purple-300 transition-colors text-sm sm:text-base">
+              AI Interview Agent
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              Practice with AI interviews
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Practice HR, tech, and support questions in interactive voice mode.
             </p>
           </Link>
 
           <Link
-            href="/profile"
+            href="/friend"
+            className="glass-card p-5 hover:-translate-y-1 transition-all duration-300 group animate-pulse-subtle"
+          >
+            <span className="text-3xl mb-3 block">🤖</span>
+            <h3 className="font-bold text-white group-hover:text-emerald-300 transition-colors text-sm sm:text-base">
+              AI English Friend
+            </h3>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Have casual chats with Buddy, a friendly coach, to build your flow.
+            </p>
+          </Link>
+
+          <Link
+            href="/challenge"
+            className="glass-card p-5 hover:-translate-y-1 transition-all duration-300 group"
+          >
+            <span className="text-3xl mb-3 block">🔥</span>
+            <h3 className="font-bold text-white group-hover:text-rose-300 transition-colors text-sm sm:text-base">
+              Daily Speaking Challenge
+            </h3>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Record a 2-minute daily speech, get AI evaluations, and gain +30 XP.
+            </p>
+          </Link>
+
+          <Link
+            href="/dashboard/study-plan"
+            className="glass-card p-5 hover:-translate-y-1 transition-all duration-300 group"
+          >
+            <span className="text-3xl mb-3 block">📋</span>
+            <h3 className="font-bold text-white group-hover:text-blue-300 transition-colors text-sm sm:text-base">
+              Personalized AI Study Plan
+            </h3>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Generate weekly roadmaps tailored to correct your speaking weaknesses.
+            </p>
+          </Link>
+
+          <Link
+            href="/analytics"
             className="glass-card p-5 hover:-translate-y-1 transition-all duration-300 group"
           >
             <span className="text-3xl mb-3 block">📊</span>
-            <h3 className="font-bold text-white group-hover:text-emerald-300 transition-colors">
-              My Progress & Badges
+            <h3 className="font-bold text-white group-hover:text-cyan-300 transition-colors text-sm sm:text-base">
+              Progress & Trend Analytics
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              View achievements and certificates
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              Inspect words learned, speaking time, and grammar progress graphs.
             </p>
           </Link>
         </div>

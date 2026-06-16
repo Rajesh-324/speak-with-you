@@ -1,12 +1,12 @@
 // ============================================================
-// API Route: POST /api/interview/evaluate
-// Evaluates a user's interview answer using AI (or placeholder)
+// API Route: POST /api/interview/report
+// Compiles the final interview report card based on chat history
 // ============================================================
 
 import { NextRequest, NextResponse } from "next/server";
-import { evaluateAnswer } from "@/lib/ai";
-import { checkRateLimit } from "@/lib/rateLimit";
+import { generateFinalReport } from "@/lib/ai";
 import type { InterviewType } from "@/types";
+import { checkRateLimit } from "@/lib/rateLimit";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,19 +16,16 @@ export async function POST(request: NextRequest) {
         { status: 429 }
       );
     }
-
     const body = await request.json();
-    const { question, answer, interviewType } = body;
+    const { messages, interviewType } = body;
 
-    // Validate input
-    if (!question || !answer || !interviewType) {
+    if (!messages || !Array.isArray(messages) || !interviewType) {
       return NextResponse.json(
-        { error: "Missing required fields: question, answer, interviewType" },
+        { error: "Missing required fields: messages, interviewType" },
         { status: 400 }
       );
     }
 
-    // Validate interview type
     const validTypes: InterviewType[] = ["hr", "tech", "support", "english", "daily"];
     if (!validTypes.includes(interviewType)) {
       return NextResponse.json(
@@ -37,12 +34,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Evaluate the answer
-    const result = await evaluateAnswer(question, answer, interviewType);
-
-    return NextResponse.json(result);
+    const report = await generateFinalReport(messages, interviewType);
+    return NextResponse.json(report);
   } catch (error) {
-    console.error("Evaluation error:", error);
+    console.error("Report compiling error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
